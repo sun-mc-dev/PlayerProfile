@@ -19,7 +19,7 @@ Advanced multi-profile management system for Minecraft Paper servers (1.21.4+).
 - **Minecraft Version**: 1.21.4+
 - **Server Software**: Paper or its forks (Purpur, Pufferfish, etc.)
 - **Java Version**: 21+
-- - **Dependencies**:
+- **Dependencies**:
     - PacketEvents (required)
 - **Optional Dependencies**:
     - LuckPerms (for permission contexts)
