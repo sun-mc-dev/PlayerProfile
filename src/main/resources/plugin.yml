@@ -1,0 +1,96 @@
+name: PlayerProfile
+version: '1.0.0'
+main: me.sunmc.PlayerProfile
+api-version: '1.21'
+authors: [ sunmc ]
+author: SunMC Development Team
+description: Advanced multi-profile management system for Minecraft servers
+website: https://github.com/sun-mc-dev/PlayerProfile
+
+softdepend:
+  - LuckPerms
+  - Vault
+  - packetevents
+
+commands:
+  profile:
+    description: Manage your player profiles
+    usage: /profile <list|current|create|switch|delete> [name]
+    aliases: [ profiles, prof ]
+    permission: profiles.use
+
+permissions:
+  profiles.use:
+    description: Allows basic profile usage
+    default: true
+
+  # Profile creation permissions
+  profiles.create.*:
+    description: Allows creating any profile
+    default: op
+    children:
+      profiles.create.default: true
+      profiles.create.admin: true
+      profiles.create.owner: true
+      profiles.create.mod: true
+      profiles.create.builder: true
+
+  profiles.create.default:
+    description: Allows creating a default profile
+    default: true
+
+  profiles.create.admin:
+    description: Allows creating an admin profile
+    default: op
+
+  profiles.create.owner:
+    description: Allows creating an owner profile
+    default: op
+
+  profiles.create.mod:
+    description: Allows creating a mod profile
+    default: op
+
+  profiles.create.builder:
+    description: Allows creating a builder profile
+    default: op
+
+  # Profile limits
+  profiles.max.unlimited:
+    description: Allows unlimited profiles
+    default: op
+
+  profiles.max.10:
+    description: Allows up to 10 profiles
+    default: false
+
+  profiles.max.5:
+    description: Allows up to 5 profiles
+    default: false
+
+  profiles.max.3:
+    description: Allows up to 3 profiles
+    default: false
+
+  profiles.max.1:
+    description: Allows 1 profile only
+    default: true
+
+  # Admin permissions
+  profiles.admin:
+    description: Full profile administration
+    default: op
+    children:
+      profiles.use: true
+      profiles.create.*: true
+      profiles.max.unlimited: true
+      profiles.bypass.combat: true
+      profiles.bypass.warmup: true
+
+  profiles.bypass.combat:
+    description: Bypass combat tag restriction
+    default: op
+
+  profiles.bypass.warmup:
+    description: Bypass warmup timer
+    default: op

@@ -1,0 +1,115 @@
+# ========================================
+# PlayerProfile Configuration
+# ========================================
+# Advanced multi-profile management system
+# Version: 1.0.0
+# ========================================
+
+# Profile settings
+profiles:
+  # Default profile name for new players
+  default-name: "default"
+
+  # Maximum length for profile names
+  max-name-length: 16
+
+# Profile switching settings
+switch:
+  # Warmup time in seconds before switching (0 = instant)
+  warmup-seconds: 5
+
+  # Cancel switch if player moves during warmup
+  cancel-on-move: true
+
+  # Cancel switch if player takes damage during warmup
+  cancel-on-damage: true
+
+  # Prevent switching while in combat
+  cancel-in-combat: true
+
+  # Duration in seconds a player is considered "in combat" after PvP
+  combat-tag-duration: 10
+
+  # Whether to change gamemode when switching profiles
+  # Warning: This allows players to potentially abuse creative mode
+  # Only enable if you have proper permission checks
+  change-gamemode: false
+
+  # Whether to change vanish state when switching profiles
+  # Requires a vanish plugin that supports state restoration
+  change-vanish: false
+
+# Database settings
+storage:
+  # Storage type: sqlite, mysql (only sqlite supported in this version)
+  type: "sqlite"
+
+  # SQLite settings
+  sqlite:
+    # Database file name
+    file: "profiles.db"
+
+  # MySQL settings (for future implementation)
+  mysql:
+    host: "localhost"
+    port: 3306
+    database: "playerprofiles"
+    username: "root"
+    password: "password"
+    pool-size: 10
+
+# Performance settings
+performance:
+  # Number of worker threads for async operations
+  # -1 = auto (number of CPU cores)
+  worker-threads: -1
+
+  # Enable async profile loading
+  async-loading: true
+
+  # Cache profiles in memory
+  cache-profiles: true
+
+  # Auto-save interval in minutes (0 = disabled)
+  auto-save-interval: 5
+
+# Messages (supports MiniMessage format)
+messages:
+  prefix: "<gold>[<yellow>Profiles</yellow>]</gold>"
+
+  # Success messages
+  profile-created: "<green>Profile '<white>{profile}</white>' created successfully!</green>"
+  profile-deleted: "<green>Profile '<white>{profile}</white>' deleted successfully!</green>"
+  profile-switched: "<green>Successfully switched to profile '<white>{profile}</white>'!</green>"
+
+  # Error messages
+  profile-exists: "<red>A profile with that name already exists!</red>"
+  profile-not-found: "<red>Profile '<white>{profile}</white>' not found!</red>"
+  already-active: "<red>You are already using this profile!</red>"
+  cannot-delete-active: "<red>You cannot delete your active profile!</red>"
+  cannot-delete-default: "<red>You cannot delete the default profile!</red>"
+  profile-limit-reached: "<red>You've reached your profile limit! ({limit})</red>"
+  invalid-name: "<red>Invalid profile name! Use only letters, numbers, and underscores.</red>"
+  name-too-long: "<red>Profile name too long! Maximum {max} characters.</red>"
+  no-permission: "<red>You don't have permission to create a profile named '<white>{profile}</white>'!</red>"
+
+  # Switch messages
+  switching: "<yellow>Switching to profile '<white>{profile}</white>' in {seconds} seconds...</yellow>"
+  switch-cancelled: "<red>Profile switch cancelled: {reason}</red>"
+  in-combat: "<red>You cannot switch profiles while in combat! ({seconds}s remaining)</red>"
+  already-switching: "<red>You are already switching profiles!</red>"
+
+  # Info messages
+  current-profile: "<green>Current profile: <white>{profile}</white></green>"
+  do-not-move: "<gray>Do not move or take damage!</gray>"
+
+# Debug settings
+debug:
+  # Enable debug logging
+  enabled: false
+
+  # Log all profile switches
+  log-switches: true
+
+  # Log database operations
+  log-database: false
