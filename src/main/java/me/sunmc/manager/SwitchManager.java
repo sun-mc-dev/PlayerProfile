@@ -1,7 +1,7 @@
-package me.sunmc.managers;
+package me.sunmc.manager;
 
 import me.sunmc.PlayerProfile;
-import me.sunmc.api.events.ProfileSwitchEvent;
+import me.sunmc.api.event.ProfileSwitchEvent;
 import me.sunmc.model.ProfileData;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;

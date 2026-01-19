@@ -1,4 +1,4 @@
-package me.sunmc.utils;
+package me.sunmc.util;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;

@@ -1,4 +1,4 @@
-package me.sunmc.listeners;
+package me.sunmc.listener;
 
 import me.sunmc.PlayerProfile;
 import org.bukkit.Location;

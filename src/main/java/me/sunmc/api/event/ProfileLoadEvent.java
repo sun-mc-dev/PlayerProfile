@@ -1,4 +1,4 @@
-package me.sunmc.api.events;
+package me.sunmc.api.event;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;

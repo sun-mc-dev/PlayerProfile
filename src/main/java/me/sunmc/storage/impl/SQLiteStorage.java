@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import me.sunmc.PlayerProfile;
 import me.sunmc.model.ProfileData;
 import me.sunmc.storage.DataStorage;
-import me.sunmc.utils.ItemStackSerializer;
+import me.sunmc.util.ItemStackSerializer;
 import org.bukkit.GameMode;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;

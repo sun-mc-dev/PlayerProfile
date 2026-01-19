@@ -1,4 +1,4 @@
-package me.sunmc.commands;
+package me.sunmc.command;
 
 import me.sunmc.PlayerProfile;
 import net.kyori.adventure.text.Component;

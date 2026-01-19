@@ -1,4 +1,4 @@
-package me.sunmc.managers;
+package me.sunmc.manager;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerAbstract;
@@ -7,12 +7,9 @@ import com.github.retrooper.packetevents.event.PacketSendEvent;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSetExperience;
 import me.sunmc.PlayerProfile;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.title.Title;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.Duration;
 import java.util.UUID;
 
 /**
@@ -96,40 +93,41 @@ public class PacketManager extends PacketListenerAbstract {
                 .sendPacket(player, packet);
     }
 
-    /**
-     * Sends a title packet with custom fade times for profile switches.
-     *
-     * @param player   the player
-     * @param title    the title text
-     * @param subtitle the subtitle text
-     * @param fadeIn   fade in time in ticks
-     * @param stay     stay time in ticks
-     * @param fadeOut  fade out time in ticks
-     */
-    public void sendCustomTitle(Player player, String title, String subtitle,
-                                int fadeIn, int stay, int fadeOut) {
-        if (!isPacketEventsAvailable()) {
-            // Fallback to standard Adventure API
-            return;
-        }
-
-        // Note: PacketEvents title sending would go here
-        // For now, we'll use the standard API
-        plugin.runSync(() -> {
-            Component titleComp = Component.text(title);
-            Component subtitleComp = Component.text(subtitle);
-
-            player.showTitle(Title.title(
-                    titleComp,
-                    subtitleComp,
-                    Title.Times.times(
-                            Duration.ofMillis(fadeIn * 50L),
-                            Duration.ofMillis(stay * 50L),
-                            Duration.ofMillis(fadeOut * 50L)
-                    )
-            ));
-        });
-    }
+//   (NOT IMPLEMENTED YET)
+//    /**
+//     * Sends a title packet with custom fade times for profile switches.
+//     *
+//     * @param player   the player
+//     * @param title    the title text
+//     * @param subtitle the subtitle text
+//     * @param fadeIn   fade in time in ticks
+//     * @param stay time in ticks
+//     * @param fadeOut  fade out time in ticks
+//     */
+//    public void sendCustomTitle(Player player, String title, String subtitle,
+//                                int fadeIn, int stay, int fadeOut) {
+//        if (!isPacketEventsAvailable()) {
+//            // Fallback to standard Adventure API
+//            return;
+//        }
+//
+//        // Note: PacketEvents title sending would go here
+//        // For now, we'll use the standard API
+//        plugin.runSync(() -> {
+//            Component titleComp = Component.text(title);
+//            Component subtitleComp = Component.text(subtitle);
+//
+//            player.showTitle(Title.title(
+//                    titleComp,
+//                    subtitleComp,
+//                    Title.Times.times(
+//                            Duration.ofMillis(fadeIn * 50L),
+//                            Duration.ofMillis(stay * 50L),
+//                            Duration.ofMillis(fadeOut * 50L)
+//                    )
+//            ));
+//        });
+//    }
 
     /**
      * Intercepts experience packets during profile switches.

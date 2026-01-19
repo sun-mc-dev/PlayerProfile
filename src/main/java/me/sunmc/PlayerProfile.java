@@ -1,18 +1,18 @@
 package me.sunmc;
 
 import me.sunmc.api.ProfileAPI;
-import me.sunmc.commands.ProfileCommand;
+import me.sunmc.command.ProfileCommand;
 import me.sunmc.config.ConfigManager;
-import me.sunmc.listeners.CombatListener;
-import me.sunmc.listeners.DamageListener;
-import me.sunmc.listeners.MovementListener;
-import me.sunmc.listeners.PlayerListener;
-import me.sunmc.managers.PacketManager;
-import me.sunmc.managers.ProfileManager;
-import me.sunmc.managers.SwitchManager;
+import me.sunmc.listener.CombatListener;
+import me.sunmc.listener.DamageListener;
+import me.sunmc.listener.MovementListener;
+import me.sunmc.listener.PlayerListener;
+import me.sunmc.manager.PacketManager;
+import me.sunmc.manager.ProfileManager;
+import me.sunmc.manager.SwitchManager;
 import me.sunmc.storage.DataStorage;
 import me.sunmc.storage.impl.SQLiteStorage;
-import me.sunmc.utils.ReflectionUtils;
+import me.sunmc.util.ReflectionUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;

@@ -1,9 +1,9 @@
-package me.sunmc.managers;
+package me.sunmc.manager;
 
 import me.sunmc.PlayerProfile;
-import me.sunmc.api.events.ProfileCreateEvent;
-import me.sunmc.api.events.ProfileDeleteEvent;
-import me.sunmc.api.events.ProfileLoadEvent;
+import me.sunmc.api.event.ProfileCreateEvent;
+import me.sunmc.api.event.ProfileDeleteEvent;
+import me.sunmc.api.event.ProfileLoadEvent;
 import me.sunmc.model.ProfileData;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
