@@ -1,5 +1,5 @@
 name: PlayerProfile
-version: '1.0.0'
+version: '1.0.1'
 main: me.sunmc.PlayerProfile
 api-version: '1.21'
 authors: [ sunmc ]
@@ -7,10 +7,11 @@ author: SunMC Development Team
 description: Advanced multi-profile management system for Minecraft servers
 website: https://github.com/sun-mc-dev/PlayerProfile
 
+depend:
+  - packetevents
 softdepend:
   - LuckPerms
   - Vault
-  - packetevents
 
 commands:
   profile:
