@@ -1,6 +1,18 @@
-# PlayerProfile
+# PlayerProfile v1.0.1
 
+---
+<div align="center">
+
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+[![](https://jitpack.io/v/sun-mc-dev/PlayerProfile.svg)](https://jitpack.io/#sun-mc-dev/PlayerProfile)
+![Paper](https://img.shields.io/badge/Paper-1.21.4+-green.svg)
+![Java](https://img.shields.io/badge/Java-21-orange.svg)
+![Status](https://img.shields.io/badge/status-production--ready-success.svg)
+</div>
+
+---
 Advanced multi-profile management system for Minecraft Paper servers (1.21.4+).
+---
 
 ## 🌟 Features
 
@@ -20,7 +32,7 @@ Advanced multi-profile management system for Minecraft Paper servers (1.21.4+).
 - **Server Software**: Paper or its forks (Purpur, Pufferfish, etc.)
 - **Java Version**: 21+
 - **Dependencies**:
-    - PacketEvents (required)
+    - PacketEvents **(required)**
 - **Optional Dependencies**:
     - LuckPerms (for permission contexts)
     - Vault (for future economy integration)
@@ -130,20 +142,20 @@ See the default `config.yml` for all available options.
 
 ## 🔧 Developer API
 
-### Maven Dependency (just an example - api upload is remaining)
+### Maven Dependency (SEE VERSION ON HEADER)
 
 ```xml
 
 <repository>
-    <id>sunmc-repo</id>
-    <url>https://repo.sunmc.me</url>
+  <id>jitpack.io</id>
+  <url>https://jitpack.io</url>
 </repository>
 
 <dependency>
-<groupId>me.sunmc</groupId>
-<artifactId>PlayerProfile</artifactId>
-<version>1.0.0</version>
-<scope>provided</scope>
+    <groupId>com.github.sun-mc-dev</groupId>
+    <artifactId>PlayerProfile</artifactId>
+    <version>VERSION</version>
+    <scope>provided</scope>
 </dependency>
 ```
 
