@@ -181,15 +181,23 @@ public class MyPlugin extends JavaPlugin implements Listener {
 
 ```java
 // Create a profile for a player
-profileAPI.createProfile(player, "custom").thenAccept(success -> {
-    if(success){
-        player.sendMessage("§aCustom profile created!");
-        // Automatically switch to it
-        profileAPI.switchProfile(player, "custom");
-    } else{
-        player.sendMessage("§cFailed to create profile!");
+profileAPI.createProfile(player, "custom").
+
+thenAccept(success ->{
+        if(success){
+        player.
+
+sendMessage("§aCustom profile created!");
+// Automatically switch to it
+        profileAPI.
+
+switchProfile(player, "custom");
+    }else{
+            player.
+
+sendMessage("§cFailed to create profile!");
     }
-});
+            });
 ```
 
 ### Checking Profile State
@@ -197,16 +205,24 @@ profileAPI.createProfile(player, "custom").thenAccept(success -> {
 ```java
 // Check what profile a player is using
 String activeProfile = profileAPI.getActiveProfile(player.getUniqueId());
-player.sendMessage("§7You are using: §e"+activeProfile);
+player.
+
+sendMessage("§7You are using: §e"+activeProfile);
 
 // Check if they have a specific profile
-if(profileAPI.profileExists(player.getUniqueId(), "admin")){
-        player.sendMessage("§aYou have an admin profile!");
+if(profileAPI.
+
+profileExists(player.getUniqueId(), "admin")){
+        player.
+
+sendMessage("§aYou have an admin profile!");
 }
 
 // List all profiles
 List<String> profiles = profileAPI.getProfiles(player.getUniqueId());
-player.sendMessage("§7Your profiles: §e"+String.join(", ", profiles));
+player.
+
+sendMessage("§7Your profiles: §e"+String.join(", ", profiles));
 ```
 
 ---
@@ -476,15 +492,23 @@ public String getCachedProfile(UUID uuid) {
 
 ```java
 // Always handle API responses asynchronously
-profileAPI.createProfile(player, "test").thenAcceptAsync(success ->{
+profileAPI.createProfile(player, "test").
+
+thenAcceptAsync(success ->{
         // This runs async, don't do Bukkit API calls here
         if(success){
-            //Schedule sync task for Bukkit API
-            Bukkit.getScheduler().runTask(plugin, () -> {
-            player.sendMessage("§aProfile created!");
+        //Schedule sync task for Bukkit API
+        Bukkit.
+
+getScheduler().
+
+runTask(plugin, () ->{
+        player.
+
+sendMessage("§aProfile created!");
             });
-        }
-});
+                    }
+                    });
 ```
 
 ---
@@ -523,12 +547,19 @@ public void transferItems(Player player) {
 **Solution**: Add error handling and logging:
 
 ```java
-profileAPI.switchProfile(player, "admin").thenAccept(success -> {
+profileAPI.switchProfile(player, "admin").
+
+thenAccept(success ->{
         if(!success){
-            getLogger().warning("Profile switch failed for "+player.getName());
-            player.sendMessage("§cSwitch failed! Check console for details.");
+
+getLogger().
+
+warning("Profile switch failed for "+player.getName());
+        player.
+
+sendMessage("§cSwitch failed! Check console for details.");
         }
-});
+                });
 ```
 
 ### Issue: Permission changes don't apply

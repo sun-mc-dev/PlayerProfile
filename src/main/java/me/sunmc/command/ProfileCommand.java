@@ -5,9 +5,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -21,13 +20,12 @@ import java.util.stream.Stream;
 /**
  * Handles all /profile commands and tab completion.
  *
- * <p>This command handler provides a comprehensive interface for managing profiles,
- * including creation, deletion, switching, and listing.</p>
+ * <p>Version 1.0.2 adds GUI support for visual profile management.</p>
  *
  * @author SunMC Development Team
- * @version 1.0.0
+ * @version 1.0.2
  */
-public class ProfileCommand implements CommandExecutor, TabCompleter {
+public class ProfileCommand implements TabExecutor {
 
     private final PlayerProfile plugin;
 
@@ -41,14 +39,16 @@ public class ProfileCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
+                             @NotNull String label, @NotNull String @NotNull [] args) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage(Component.text("Only players can use this command!", NamedTextColor.RED));
             return true;
         }
 
-        if (args.length == 0) {
-            sendHelp(player);
+        // No args or "gui" subcommand opens the GUI
+        if (args.length == 0 || (args.length == 1 && args[0].equalsIgnoreCase("gui"))) {
+            plugin.getProfileGUI().openProfileGUI(player);
             return true;
         }
 
@@ -60,6 +60,7 @@ public class ProfileCommand implements CommandExecutor, TabCompleter {
             case "create" -> handleCreate(player, args);
             case "switch" -> handleSwitch(player, args);
             case "delete" -> handleDelete(player, args);
+            case "metrics" -> handleMetrics(player);
             default -> sendHelp(player);
         }
 
@@ -73,6 +74,10 @@ public class ProfileCommand implements CommandExecutor, TabCompleter {
         player.sendMessage(Component.text("━━━━━━━━━━━━━━━━━━━━━━━━", NamedTextColor.GOLD, TextDecoration.BOLD));
         player.sendMessage(Component.text("Profile Commands", NamedTextColor.YELLOW, TextDecoration.BOLD));
         player.sendMessage(Component.text("━━━━━━━━━━━━━━━━━━━━━━━━", NamedTextColor.GOLD, TextDecoration.BOLD));
+        player.sendMessage(Component.text("/profile", NamedTextColor.GRAY)
+                .append(Component.text(" - Open GUI menu", NamedTextColor.WHITE)));
+        player.sendMessage(Component.text("/profile gui", NamedTextColor.GRAY)
+                .append(Component.text(" - Open GUI menu", NamedTextColor.WHITE)));
         player.sendMessage(Component.text("/profile list", NamedTextColor.GRAY)
                 .append(Component.text(" - List all your profiles", NamedTextColor.WHITE)));
         player.sendMessage(Component.text("/profile current", NamedTextColor.GRAY)
@@ -83,6 +88,12 @@ public class ProfileCommand implements CommandExecutor, TabCompleter {
                 .append(Component.text(" - Switch to a profile", NamedTextColor.WHITE)));
         player.sendMessage(Component.text("/profile delete <name>", NamedTextColor.GRAY)
                 .append(Component.text(" - Delete a profile", NamedTextColor.WHITE)));
+
+        if (player.hasPermission("profiles.admin")) {
+            player.sendMessage(Component.text("/profile metrics", NamedTextColor.GRAY)
+                    .append(Component.text(" - View database metrics", NamedTextColor.WHITE)));
+        }
+
         player.sendMessage(Component.text("━━━━━━━━━━━━━━━━━━━━━━━━", NamedTextColor.GOLD, TextDecoration.BOLD));
     }
 
@@ -115,6 +126,8 @@ public class ProfileCommand implements CommandExecutor, TabCompleter {
         }
 
         player.sendMessage(Component.text("━━━━━━━━━━━━━━━━━━━━━━━━", NamedTextColor.GOLD));
+        player.sendMessage(Component.text("Tip: Use /profile gui for visual management!",
+                NamedTextColor.GRAY, TextDecoration.ITALIC));
     }
 
     /**
@@ -261,6 +274,43 @@ public class ProfileCommand implements CommandExecutor, TabCompleter {
     }
 
     /**
+     * Handles the metrics subcommand (admin only).
+     */
+    private void handleMetrics(@NotNull Player player) {
+        if (!player.hasPermission("profiles.admin")) {
+            plugin.sendMessage(player, "You don't have permission to view metrics!", NamedTextColor.RED);
+            return;
+        }
+
+        var metrics = plugin.getDatabaseManager().getMetrics();
+
+        player.sendMessage(Component.text("━━━━━━━━━━━━━━━━━━━━━━━━", NamedTextColor.GOLD, TextDecoration.BOLD));
+        player.sendMessage(Component.text("Database Metrics", NamedTextColor.YELLOW, TextDecoration.BOLD));
+        player.sendMessage(Component.text("━━━━━━━━━━━━━━━━━━━━━━━━", NamedTextColor.GOLD, TextDecoration.BOLD));
+
+        player.sendMessage(Component.text("Queries Executed: ", NamedTextColor.GRAY)
+                .append(Component.text(metrics.getQueriesExecuted(), NamedTextColor.WHITE)));
+
+        player.sendMessage(Component.text("Cache Hit Rate: ", NamedTextColor.GRAY)
+                .append(Component.text(String.format("%.2f%%", metrics.getCacheHitRate()), NamedTextColor.GREEN)));
+
+        player.sendMessage(Component.text("Cache Hits: ", NamedTextColor.GRAY)
+                .append(Component.text(metrics.getCacheHits(), NamedTextColor.WHITE)));
+
+        player.sendMessage(Component.text("Cache Misses: ", NamedTextColor.GRAY)
+                .append(Component.text(metrics.getCacheMisses(), NamedTextColor.WHITE)));
+
+        player.sendMessage(Component.text("Avg Query Time: ", NamedTextColor.GRAY)
+                .append(Component.text(String.format("%.2fms", metrics.getAverageQueryTimeMs()), NamedTextColor.YELLOW)));
+
+        player.sendMessage(Component.text("Errors: ", NamedTextColor.GRAY)
+                .append(Component.text(metrics.getErrors(),
+                        metrics.getErrors() > 0 ? NamedTextColor.RED : NamedTextColor.GREEN)));
+
+        player.sendMessage(Component.text("━━━━━━━━━━━━━━━━━━━━━━━━", NamedTextColor.GOLD, TextDecoration.BOLD));
+    }
+
+    /**
      * Validates a profile name.
      */
     @Contract(pure = true)
@@ -287,15 +337,24 @@ public class ProfileCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
+                                      @NotNull String alias, @NotNull String @NotNull [] args) {
         if (!(sender instanceof Player player)) {
             return new ArrayList<>();
         }
 
         if (args.length == 1) {
-            return Stream.of("list", "current", "create", "switch", "delete")
-                    .filter(s -> s.startsWith(args[0].toLowerCase()))
-                    .collect(Collectors.toList());
+            List<String> completions = new ArrayList<>(
+                    Stream.of("gui", "list", "current", "create", "switch", "delete")
+                            .filter(s -> s.startsWith(args[0].toLowerCase()))
+                            .toList()
+            );
+
+            if (player.hasPermission("profiles.admin")) {
+                completions.add("metrics");
+            }
+
+            return completions;
         }
 
         if (args.length == 2) {

@@ -3,15 +3,12 @@ package me.sunmc;
 import me.sunmc.api.ProfileAPI;
 import me.sunmc.command.ProfileCommand;
 import me.sunmc.config.ConfigManager;
-import me.sunmc.listener.CombatListener;
-import me.sunmc.listener.DamageListener;
-import me.sunmc.listener.MovementListener;
-import me.sunmc.listener.PlayerListener;
+import me.sunmc.gui.ProfileGUI;
+import me.sunmc.listener.*;
 import me.sunmc.manager.PacketManager;
 import me.sunmc.manager.ProfileManager;
 import me.sunmc.manager.SwitchManager;
-import me.sunmc.storage.DataStorage;
-import me.sunmc.storage.impl.SQLiteStorage;
+import me.sunmc.storage.DatabaseManager;
 import me.sunmc.util.ReflectionUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -31,29 +28,28 @@ import java.util.logging.Level;
  * each with their own inventory, permissions, XP, and more. Perfect for servers
  * where players need different contexts (e.g., admin vs player mode).</p>
  *
- * <p>Features:
+ * <p>Version 1.0.2 Features:
  * <ul>
- *   <li>Unlimited profiles per player (permission-based)</li>
- *   <li>Complete data isolation between profiles</li>
- *   <li>Combat and movement protection during switches</li>
- *   <li>LuckPerms integration for permission contexts</li>
- *   <li>Async operations for optimal performance</li>
- *   <li>Configurable warmup timers and restrictions</li>
+ *   <li>Client-side GUI using PacketEvents (zero server load)</li>
+ *   <li>Enhanced database with connection pooling and caching</li>
+ *   <li>Batch operations for improved performance</li>
+ *   <li>Comprehensive metrics tracking</li>
  * </ul>
  * </p>
  *
  * @author SunMC Development Team
- * @version 1.0.0
+ * @version 1.0.2
  */
 public final class PlayerProfile extends JavaPlugin {
 
     private static PlayerProfile instance;
 
     private ConfigManager configManager;
-    private DataStorage dataStorage;
+    private DatabaseManager databaseManager;
     private ProfileManager profileManager;
     private SwitchManager switchManager;
     private PacketManager packetManager;
+    private ProfileGUI profileGUI;
     private ExecutorService executorService;
 
     /**
@@ -79,19 +75,23 @@ public final class PlayerProfile extends JavaPlugin {
             return thread;
         });
 
-        getLogger().info("Initializing PlayerProfile plugin...");
+        getLogger().info("Initializing PlayerProfile v1.0.2...");
 
         this.configManager = new ConfigManager(this);
         this.configManager.loadConfig();
 
-        this.dataStorage = new SQLiteStorage(this);
-        this.dataStorage.initialize();
+        // Initialize enhanced database manager
+        this.databaseManager = new DatabaseManager(this);
 
         this.profileManager = new ProfileManager(this);
         this.switchManager = new SwitchManager(this);
 
         this.packetManager = new PacketManager(this);
         this.packetManager.initialize();
+
+        // Initialize GUI system
+        this.profileGUI = new ProfileGUI(this);
+        getLogger().info("Client-side GUI system initialized");
 
         ProfileAPI.initialize(this);
 
@@ -103,6 +103,7 @@ public final class PlayerProfile extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CombatListener(this), this);
         getServer().getPluginManager().registerEvents(new DamageListener(this), this);
         getServer().getPluginManager().registerEvents(new MovementListener(this), this);
+        getServer().getPluginManager().registerEvents(new GUIListener(this), this);
 
         if (getServer().getPluginManager().getPlugin("LuckPerms") != null) {
             getLogger().info("LuckPerms integration enabled");
@@ -110,9 +111,13 @@ public final class PlayerProfile extends JavaPlugin {
             getLogger().warning("LuckPerms not found - permission contexts will not be available");
         }
 
+        // Start metrics reporting
+        startMetricsReporting();
+
         long loadTime = System.currentTimeMillis() - startTime;
-        getLogger().info(String.format("PlayerProfile enabled successfully in %dms", loadTime));
+        getLogger().info(String.format("PlayerProfile v1.0.2 enabled successfully in %dms", loadTime));
         getLogger().info("Public API available via ProfileAPI.getInstance()");
+        getLogger().info("GUI system: Client-side rendering (zero TPS impact)");
     }
 
     @Override
@@ -131,8 +136,8 @@ public final class PlayerProfile extends JavaPlugin {
             profileManager.shutdown();
         }
 
-        if (dataStorage != null) {
-            dataStorage.close();
+        if (databaseManager != null) {
+            databaseManager.shutdown();
         }
 
         ReflectionUtils.clearCaches();
@@ -153,6 +158,16 @@ public final class PlayerProfile extends JavaPlugin {
     }
 
     /**
+     * Starts periodic metrics reporting.
+     */
+    private void startMetricsReporting() {
+        getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
+            DatabaseManager.DatabaseMetrics metrics = databaseManager.getMetrics();
+            getLogger().info("Database Metrics: " + metrics.getSummary());
+        }, 12000L, 12000L); // Every 10 minutes
+    }
+
+    /**
      * Gets the configuration manager.
      *
      * @return the configuration manager instance
@@ -162,12 +177,12 @@ public final class PlayerProfile extends JavaPlugin {
     }
 
     /**
-     * Gets the data storage handler.
+     * Gets the database manager.
      *
-     * @return the data storage instance
+     * @return the database manager instance
      */
-    public DataStorage getDataStorage() {
-        return dataStorage;
+    public DatabaseManager getDatabaseManager() {
+        return databaseManager;
     }
 
     /**
@@ -195,6 +210,15 @@ public final class PlayerProfile extends JavaPlugin {
      */
     public PacketManager getPacketManager() {
         return packetManager;
+    }
+
+    /**
+     * Gets the GUI manager.
+     *
+     * @return the GUI manager instance
+     */
+    public ProfileGUI getProfileGUI() {
+        return profileGUI;
     }
 
     /**

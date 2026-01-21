@@ -173,23 +173,39 @@ List<String> profiles = api.getProfiles(uuid);
 String active = api.getActiveProfile(uuid);
 
 // Create a profile
-api.createProfile(player, "custom").thenAccept(success -> {
-    if(success){
-        player.sendMessage("Profile created!");
+api.
+
+createProfile(player, "custom").
+
+thenAccept(success ->{
+        if(success){
+        player.
+
+sendMessage("Profile created!");
     }
-});
+            });
 
 // Switch profiles
-api.switchProfile(player, "custom").thenAccept(success -> {
-    if(success){
-        player.sendMessage("Switched!");
+            api.
+
+switchProfile(player, "custom").
+
+thenAccept(success ->{
+        if(success){
+        player.
+
+sendMessage("Switched!");
     }
-});
+            });
 
 // Check if player is in combat
-if(api.isInCombat(uuid)) {
-    long remaining = api.getRemainingCombatTime(uuid);
-    player.sendMessage("You are in combat! "+remaining +"s remaining");
+            if(api.
+
+isInCombat(uuid)){
+long remaining = api.getRemainingCombatTime(uuid);
+    player.
+
+sendMessage("You are in combat! "+remaining +"s remaining");
 }
 
 // Force instant switch (bypasses all restrictions)
